@@ -13,22 +13,10 @@
       "include": "#comment"
     },
     {
-      "include": "#float_literal"
+      "include": "#func_def"
     },
     {
-      "include": "#int_literal"
-    },
-    {
-      "include": "#reserved"
-    },
-    {
-      "include": "#char_literal"
-    },
-    {
-      "include": "#string_literal"
-    },
-    {
-      "include": "#ident"
+      "include": "#atom"
     }
   ],
   "repository": {
@@ -236,7 +224,7 @@
       },
       "patterns": [
         {
-          "include": "#int_literal"
+          "include": "#atom"
         }
       ]
     },
@@ -288,6 +276,209 @@
           "name": "constant.character.escape.terbium"
         }
       }
+    },
+
+    "atom": {
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#float_literal"
+        },
+        {
+          "include": "#int_literal"
+        },
+        {
+          "include": "#reserved"
+        },
+        {
+          "include": "#char_literal"
+        },
+        {
+          "include": "#string_literal"
+        },
+        {
+          "include": "#ident"
+        }
+      ]
+    },
+    
+    "type": {
+      "comment": "Type",
+      "patterns": [
+        {
+          "include": "#primitive_ty"
+        },
+        {
+          "include": "#atom"
+        }
+      ]
+    },
+
+    "pat_ident": {
+      "comment": "Binding",
+      "match": "(mut)?\\s*([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)",
+      "captures": {
+        "1": {
+          "name": "keyword.other.mut.terbium"
+        },
+        "2": {
+          "name": "variable.other.terbium"
+        }
+      }
+    },
+    "pat_tuple": {
+      "comment": "Tuple binding",
+      "begin": "\\(",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.section.begin.terbium"
+        }
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.section.end.terbium"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#pat"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.separator.terbium"
+        }
+      ]
+    },
+    "pat": {
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#pat_ident"
+        },
+        {
+          "include": "#pat_tuple"
+        }
+      ]
+    },
+
+    "pat_ident_func": {
+      "comment": "Binding",
+      "match": "(mut)?\\s*([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)",
+      "captures": {
+        "1": {
+          "name": "keyword.other.mut.terbium"
+        },
+        "2": {
+          "name": "variable.parameter.terbium"
+        }
+      }
+    },
+    "pat_tuple_func": {
+      "comment": "Tuple binding",
+      "begin": "\\(",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.section.begin.terbium"
+        }
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.section.end.terbium"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#pat_func"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.separator.terbium"
+        }
+      ]
+    },
+    "pat_func": {
+      "patterns": [
+        {
+          "include": "#pat_ident_func"
+        },
+        {
+          "include": "#pat_tuple_func"
+        }
+      ]
+    },
+
+    "func_def": {
+      "comment": "Function definition",
+      "begin": "\\b(func)\\s+([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.other.func.terbium"
+        },
+        "2": {
+          "name": "entity.name.func.terbium"
+        }
+      },
+      "end": "[\\{;]",
+      "patterns": [
+        {
+          "begin": "\\(",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.parameters.begin.terbium"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.parameters.end.terbium"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#pat_func"
+            },
+            {
+              "match": ",",
+              "name": "punctuation.separator.terbium"
+            },
+            {
+              "begin": ":",
+              "beginCaptures": {
+                "0": {
+                  "name": "punctuation.separator.type.terbium"
+                }
+              },
+              "end": "(?=,|\\))",
+              "patterns": [
+                {
+                  "include": "#type"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#self"
+        },
+        {
+          "include": "#mut"
+        },
+        {
+          "include": "#atom"
+        },
+        {
+          "include": "#const"
+        }
+      ]
     }
   }
 }
