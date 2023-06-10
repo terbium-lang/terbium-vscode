@@ -13,7 +13,7 @@
     "languages": [{
       "id": "terbium",
       "aliases": ["Terbium", "terbium"],
-      "extensions": [".tb",".trb",".terbium"],
+      "extensions": [".tb", ".trb", ".terbium"],
       "configuration": "./language-configuration.json"
     }],
     "grammars": [{
