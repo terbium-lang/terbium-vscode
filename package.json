@@ -1,0 +1,25 @@
+{
+  "name": "terbium-vscode",
+  "displayName": "Terbium",
+  "description": "Language support for Terbium",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.79.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "terbium",
+      "aliases": ["Terbium", "terbium"],
+      "extensions": [".tb",".trb",".terbium"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "terbium",
+      "scopeName": "source.terbium",
+      "path": "./syntaxes/terbium.tmLanguage.json"
+    }]
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "name": "Terbium",
+  "scopeName": "source.terbium",
+  "fileTypes": [
+    "tb",
+    "trb",
+    "terbium"
+  ],
+  "foldingStartMarker": "\\{\\s*$",
+  "foldingStopMarker": "^\\s*\\}",
+  "patterns": [
+    {
+      "name": "constant.character.terbium",
+      "begin": "c(['\"])",
+      "end": "\\1",
+      "patterns": [
+        {
+          "include": "#escape_seq"
+        },
+        {
+          "match": "\\S"
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "base_num": "[0-9][0-9_]*"
+    }
+  ],
+  "repository": {
+    "ident": {
+      "match": "[a-zA-Z_][a-zA-Z0-9_]*"
+    },
+    "int_literal": {
+      "match": "{{base_num}}u?"
+    },
+    "float_literal": {
+      "match": "[0-9][0-9_]*(?:\\.[0-9][0-9_]*)?[Ee][+-]?[0-9]+|\\.[0-9][0-9_]*"
+    },
+    "escape_seq": {
+      "name": "constant.character.escape.terbium",
+      "match": "\\\\(?:[0-7]{1,3}|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4}|U[0-9a-fA-F]{8}|[abfnrtv'\"?\\\\])"
+    },
+    "string_literal": {
+      "begin": "(?:~|$|~$|$~)?(#*)(['\"])",
+      "end": "\\2\\1",
+      "patterns": [
+        {
+          "include": "#escape_seq"
+        },
+        {
+          "match": "\\S"
+        }
+      ]
+    }
+  }
+}
