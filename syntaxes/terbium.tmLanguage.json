@@ -10,52 +10,86 @@
   "foldingStopMarker": "^\\s*\\}",
   "patterns": [
     {
-      "include": "#comment"
-    },
-    {
-      "include": "#func_def"
-    },
-    {
-      "include": "#vis"
-    },
-    {
-      "begin": "\\blet\\b",
-      "beginCaptures": {
-        "0": {
-          "name": "keyword.declaration.let.terbium"
-        }
-      },
-      "end": "(?=[;=])",
-      "patterns": [
-        {
-          "include": "#pat"
-        }
-      ]
-    },
-    {
-      "begin": "\\bfor\\b",
-      "beginCaptures": {
-        "0": {
-          "name": "keyword.control.terbium"
-        }
-      },
-      "end": "\\bin\\b",
-      "endCaptures": {
-        "0": {
-          "name": "keyword.control.terbium"
-        }
-      },
-      "patterns": [
-        {
-          "include": "#pat"
-        }
-      ]
-    },
-    {
-      "include": "#atom"
+      "include": "#root"
     }
   ],
   "repository": {
+    "root": {
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#func_def"
+        },
+        {
+          "include": "#concrete_def"
+        },
+        {
+          "include": "#const_def"
+        },
+        {
+          "include": "#alias_def"
+        },
+        {
+          "include": "#type_alias_def"
+        },
+        {
+          "include": "#vis"
+        },
+        {
+          "begin": "\\blet\\b",
+          "beginCaptures": {
+            "0": {
+              "name": "keyword.declaration.let.terbium"
+            }
+          },
+          "end": "(?=[;=])",
+          "patterns": [
+            {
+              "begin": ":",
+              "beginCaptures": {
+                "0": {
+                  "name": "punctuation.separator.type.terbium"
+                }
+              },
+              "end": "(?=[;=])",
+              "patterns": [
+                {
+                  "include": "#ty"
+                }
+              ]
+            },
+            {
+              "include": "#pat"
+            }
+          ]
+        },
+        {
+          "begin": "\\bfor\\b",
+          "beginCaptures": {
+            "0": {
+              "name": "keyword.control.terbium"
+            }
+          },
+          "end": "\\bin\\b",
+          "endCaptures": {
+            "0": {
+              "name": "keyword.control.terbium"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#pat"
+            }
+          ]
+        },
+        {
+          "include": "#atom"
+        }
+      ]
+    },
+
     "block_doc_comment": {
       "comment": "Block documentation comment",
       "name": "comment.block.documentation.terbium",
@@ -161,20 +195,19 @@
       "name": "variable.language.terbium",
       "match": "\\bself\\b"
     },
+    "self_ty": {
+      "name": "variable.language.type.terbium",
+      "match": "\\bSelf\\b"
+    },
     "kw_control": {
       "comment": "Control keyword",
       "name": "keyword.control.terbium",
-      "match": "\\b(break|continue|else|if|then|loop|match|return|while|when)\\b"
+      "match": "\\b(break|continue|else|if|then|loop|return|while)\\b"
     },
     "kw_operator": {
       "comment": "Operator keyword",
-      "name": "keyword.operator.terbium",
+      "name": "keyword.operator.word.terbium",
       "match": "\\b(to|is)\\b"
-    },
-    "kw_const": {
-      "comment": "Const keyword",
-      "name": "storage.modifier.const.terbium",
-      "match": "\\bconst\\b"
     },
     "kw_static": {
       "comment": "Static keyword",
@@ -193,6 +226,9 @@
         },
         {
           "include": "#self"
+        },
+        {
+          "include": "#self_ty"
         },
         {
           "include": "#mut"
@@ -309,6 +345,34 @@
       }
     },
 
+    "when": {
+      "name": "meta.when.terbium",
+      "begin": "(\\bwhen)\\s*(\\{)",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.control.terbium"
+        },
+        "2": {
+          "name": "punctuation.section.other.arms.terbium"
+        }
+      },
+      "end": "\\}",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.section.other.arms.terbium"
+        }
+      },
+      "patterns": [
+        {
+          "name": "keyword.operator.diverge.terbium",
+          "match": "->"
+        },
+        {
+          "include": "#atom"
+        }
+      ]
+    },
+
     "atom": {
       "patterns": [
         {
@@ -328,6 +392,9 @@
         },
         {
           "include": "#string_literal"
+        },
+        {
+          "include": "#when"          
         },
         {
           "name": "meta.function-call.terbium",
@@ -376,8 +443,32 @@
           "match": ","
         },
         {
+          "name": "punctuation.terminator.terbium",
+          "match": ";"
+        },
+        {
           "name": "keyword.operator.terbium",
-          "match": "(\\+|\\-|\\*\\*?|/|%|\\|\\|?|&&?|\\^|~|!)=?"
+          "match": "[!=]=|(\\+|\\-|\\*\\*?|/|%|\\|\\|?|&&?|\\^|~|!|<<?|>>?)=?"
+        },
+        {
+          "name": "meta.block.terbium",
+          "begin": "\\{",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.block.begin.terbium"
+            }
+          },
+          "end": "\\}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.block.end.terbium"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#root"
+            }
+          ]
         }
       ]
     },
@@ -401,8 +492,7 @@
           "match": "\\bto\\b"
         },
         {
-          "name": "variable.language.type.terbium",
-          "match": "\\bSelf\\b"
+          "include": "#self_ty"
         },
         {
           "name": "variable.other.type.terbium",
@@ -642,18 +732,88 @@
       ]
     },
 
-    "func_def": {
-      "comment": "Function definition",
-      "begin": "\\b(func)\\s+([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)",
+    "const_def": {
+      "comment": "Constant definition",
+      "begin": "(const)\\s+([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)\\b",
       "beginCaptures": {
         "1": {
-          "name": "keyword.other.func.terbium"
+          "name": "keyword.declaration.constant.terbium"
         },
         "2": {
+          "name": "entity.name.constant.terbium"
+        }
+      },
+      "end": "\\=",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.terbium"
+        }
+      },
+      "patterns": [
+        {
+          "begin": ":",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.separator.type.terbium"
+            }
+          },
+          "end": "(?=\\=)",
+          "patterns": [
+            {
+              "include": "#type"
+            }
+          ]
+        }
+      ]
+    },
+
+    "alias_def": {
+      "comment": "Alias definition",
+      "begin": "\\b(alias)\\s+([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.declaration.alias.terbium"
+        },
+        "2": {
+          "name": "entity.name.constant.terbium"
+        }
+      },
+      "end": "="
+    },
+
+    "func_def": {
+      "comment": "Function definition",
+      "begin": "(\\bop\\s+)?\\b(func)\\s+([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)",
+      "beginCaptures": {
+        "1": {
+          "name": "storage.modifier.operation.terbium"
+        },
+        "2": {
+          "name": "keyword.declaration.function.terbium"
+        },
+        "3": {
           "name": "entity.name.func.terbium"
         }
       },
-      "end": "[\\{;]",
+      "end": "[\\{;=]",
+      "endCaptures": {
+        "0": {
+          "patterns": [
+            {
+              "name": "punctuation.terminator.terbium",
+              "match": ";"
+            },
+            {
+              "name": "punctuation.definition.terbium",
+              "match": "="
+            },
+            {
+              "name": "punctuation.section.block.begin.terbium",
+              "match": "\\{"
+            }
+          ]
+        }
+      },
       "patterns": [
         {
           "include": "#type_params"
@@ -705,7 +865,7 @@
               "name": "keyword.operator.returns.terbium"
             }
           },
-          "end": "(?=\\{|;)",
+          "end": "(?=\\{|;|=)",
           "patterns": [
             {
               "include": "#type"
@@ -726,6 +886,87 @@
         },
         {
           "include": "#const"
+        }
+      ]
+    },
+
+    "type_alias_def": {
+      "begin": "\\b(type)\\s+([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.declaration.type.terbium"
+        },
+        "2": {
+          "name": "entity.name.type.terbium"
+        }
+      },
+      "end": ";",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.terminator.terbium"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#type_params"
+        },
+        {
+          "begin": "=",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.separator.type.terbium"
+            }
+          },
+          "end": "(?=;)",
+          "patterns": [
+            {
+              "include": "#type"
+            }
+          ]
+        }
+      ]
+    },
+
+    "concrete_def": {
+      "begin": "\\b(struct|enum)\\s+([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)",
+      "beginCaptures": {
+        "1": {
+          "patterns": [
+            {
+              "match": "struct",
+              "name": "keyword.declaration.struct.terbium"
+            },
+            {
+              "match": "enum",
+              "name": "keyword.declaration.enum.terbium"
+            }
+          ]
+        },
+        "2": {
+          "name": "entity.name.struct.terbium"
+        }
+      },
+      "end": "[\\{\\(;]",
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#type_params"
+        },
+        {
+          "begin": ":",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.separator.type.terbium"
+            }
+          },
+          "end": "(?=\\{|;)",
+          "patterns": [
+            {
+              "include": "#type"
+            }
+          ]
         }
       ]
     }
