@@ -792,7 +792,7 @@
           "name": "keyword.declaration.function.terbium"
         },
         "3": {
-          "name": "entity.name.func.terbium"
+          "name": "entity.name.function.terbium, meta.definition.function.terbium"
         }
       },
       "end": "[\\{;=]",
@@ -943,7 +943,7 @@
           ]
         },
         "2": {
-          "name": "entity.name.struct.terbium"
+          "name": "entity.name.struct.terbium, meta.definition.type.terbium"
         }
       },
       "end": "[\\{\\(;]",
