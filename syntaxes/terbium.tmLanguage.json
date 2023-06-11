@@ -16,6 +16,42 @@
       "include": "#func_def"
     },
     {
+      "include": "#vis"
+    },
+    {
+      "begin": "\\blet\\b",
+      "beginCaptures": {
+        "0": {
+          "name": "keyword.declaration.let.terbium"
+        }
+      },
+      "end": "(?=[;=])",
+      "patterns": [
+        {
+          "include": "#pat"
+        }
+      ]
+    },
+    {
+      "begin": "\\bfor\\b",
+      "beginCaptures": {
+        "0": {
+          "name": "keyword.control.terbium"
+        }
+      },
+      "end": "\\bin\\b",
+      "endCaptures": {
+        "0": {
+          "name": "keyword.control.terbium"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#pat"
+        }
+      ]
+    },
+    {
       "include": "#atom"
     }
   ],
@@ -125,15 +161,10 @@
       "name": "variable.language.terbium",
       "match": "\\bself\\b"
     },
-    "mut": {
-      "comment": "Mutable storage modifier",
-      "name": "storage.modifier.mut.terbium",
-      "match": "\\bmut\\b"
-    },
     "kw_control": {
       "comment": "Control keyword",
       "name": "keyword.control.terbium",
-      "match": "\\b(break|continue|else|if|for|loop|match|return|while|when)\\b"
+      "match": "\\b(break|continue|else|if|then|loop|match|return|while|when)\\b"
     },
     "kw_operator": {
       "comment": "Operator keyword",
@@ -299,7 +330,54 @@
           "include": "#string_literal"
         },
         {
+          "name": "meta.function-call.terbium",
+          "begin": "\\b([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)\\s*((?<ang>\\<(?:(?>[^<>]+)|\\g<ang>)*\\>))?\\s*(\\()",
+          "beginCaptures": {
+            "1": {
+              "name": "variable.function.terbium"
+            },
+            "2": {
+              "name": "punctuation.section.generic.terbium",
+              "patterns": [
+                {
+                  "include": "#generic_application"
+                }
+              ]
+            },
+            "3": {
+              "name": "punctuation.section.parens.begin.terbium"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.parens.end.terbium"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#atom"
+            }
+          ]
+        },
+        {
           "include": "#ident"
+        },
+        {
+          "name": "keyword.operator.terbium",
+          "match": "\\.\\.=?"
+        },
+        {
+          "name": "punctuation.accessor.terbium",
+          "match": "\\."
+        },
+        {
+          "name": "punctuation.separator.terbium",
+          "match": ","
+        },
+        {
+          "name": "keyword.operator.terbium",
+          "match": "(\\+|\\-|\\*\\*?|/|%|\\|\\|?|&&?|\\^|~|!)=?"
         }
       ]
     },
@@ -311,17 +389,127 @@
           "include": "#primitive_ty"
         },
         {
-          "include": "#atom"
+          "name": "storage.modifier.mutable.terbium",
+          "match": "\\bmut\\b"
+        },
+        {
+          "name": "storage.modifier.ref.terbium",
+          "match": "\\bref\\b"
+        },
+        {
+          "name": "keyword.operator.to.terbium",
+          "match": "\\bto\\b"
+        },
+        {
+          "name": "variable.language.type.terbium",
+          "match": "\\bSelf\\b"
+        },
+        {
+          "name": "variable.other.type.terbium",
+          "patterns": [
+            {
+              "include": "#ident"
+            }
+          ]
+        },
+        {
+          "include": "#int_literal"
+        },
+        {
+          "include": "#generic_application"
+        },
+        {
+          "match": "\\.",
+          "name": "punctuation.accessor.terbium"
+        },
+        {
+          "match": "\\?",
+          "name": "keyword.operator.optional.terbium"
+        }
+      ]
+    },
+    "generic_application": {
+      "comment": "Generic type application",
+      "begin": "<",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.section.generic.begin.terbium"
+        }
+      },
+      "end": ">",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.section.generic.end.terbium"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#type"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.separator.terbium"
+        },
+        {
+          "match": "=",
+          "name": "punctuation.definition.terbium"
+        }
+      ]
+    },
+    
+    "type_param": {
+      "comment": "Generic type parameter",
+      "begin": "\\b([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)\\s*(:)?",
+      "beginCaptures": {
+        "1": {
+          "name": "entity.name.type.terbium"
+        },
+        "2": {
+          "name": "punctuation.separator.type.terbium"
+        }
+      },
+      "end": "(?=[,>])",
+      "patterns": [
+        {
+          "include": "#type"
+        }
+      ]
+    },
+    "type_params": {
+      "name": "meta.type_params.terbium",
+      "begin": "<(?!<)",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.section.generic.begin.terbium"
+        }
+      },
+      "end": ">",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.section.generic.end.terbium"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#type_param"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.separator.terbium"
+        },
+        {
+          "match": "=",
+          "name": "punctuation.definition.terbium"
         }
       ]
     },
 
     "pat_ident": {
       "comment": "Binding",
-      "match": "(mut)?\\s*([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)",
+      "match": "(\\bmut\\s+)?([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)",
       "captures": {
         "1": {
-          "name": "keyword.other.mut.terbium"
+          "name": "storage.modifier.mutable.terbium"
         },
         "2": {
           "name": "variable.other.terbium"
@@ -368,10 +556,10 @@
 
     "pat_ident_func": {
       "comment": "Binding",
-      "match": "(mut)?\\s*([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)",
+      "match": "(\\bmut\\s+)?([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)",
       "captures": {
         "1": {
-          "name": "keyword.other.mut.terbium"
+          "name": "storage.modifier.mutable.terbium"
         },
         "2": {
           "name": "variable.parameter.terbium"
@@ -413,6 +601,47 @@
       ]
     },
 
+    "vis": {
+      "comment": "Visibility",
+      "patterns": [
+        {
+          "begin": "(public)(\\()",
+          "beginCaptures": {
+            "1": {
+              "name": "storage.modifier.visibility.terbium"
+            },
+            "2": {
+              "name": "punctuation.section.parameters.begin.terbium"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.parameters.end.terbium"
+            }
+          },
+          "patterns": [
+            {
+              "match": "pubilc|lib|super|mod|sub|private",
+              "name": "storage.modifier.visibility.terbium"
+            },
+            {
+              "match": "[gs]et",
+              "name": "keyword.other.terbium"
+            },
+            {
+              "match": ",",
+              "name": "punctuation.separator.terbium"
+            }
+          ]
+        },
+        {
+          "name": "storage.modifier.visibility.terbium",
+          "match": "\\b(public|private)\\b"
+        }
+      ]
+    },
+
     "func_def": {
       "comment": "Function definition",
       "begin": "\\b(func)\\s+([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)",
@@ -427,6 +656,9 @@
       "end": "[\\{;]",
       "patterns": [
         {
+          "include": "#type_params"
+        },
+        {
           "begin": "\\(",
           "beginCaptures": {
             "0": {
@@ -440,6 +672,9 @@
             }
           },
           "patterns": [
+            {
+              "include": "#self"
+            },
             {
               "include": "#pat_func"
             },
@@ -460,6 +695,20 @@
                   "include": "#type"
                 }
               ]
+            }
+          ]
+        },
+        {
+          "begin": "->",
+          "beginCaptures": {
+            "0": {
+              "name": "keyword.operator.returns.terbium"
+            }
+          },
+          "end": "(?=\\{|;)",
+          "patterns": [
+            {
+              "include": "#type"
             }
           ]
         },
