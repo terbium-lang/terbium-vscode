@@ -20,6 +20,9 @@
           "include": "#comment"
         },
         {
+          "include": "#import"
+        },
+        {
           "include": "#func_def"
         },
         {
@@ -1226,6 +1229,95 @@
         },
         {
           "include": "#enum_def"
+        }
+      ]
+    },
+
+    "import_inner": {
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.separator.terbium"
+        },
+        {
+          "match": "\\.",
+          "name": "punctuation.accessor.terbium"
+        },
+        {
+          "match": "self|super|lib",
+          "name": "variable.language.terbium"
+        },
+        {
+          "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)\\.",
+          "captures": {
+            "1": {
+              "name": "variable.other.module.terbium"
+            }
+          }
+        },
+        {
+          "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)\\s*(as)\\s+([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)",
+          "captures": {
+            "1": {
+              "name": "variable.other.module.terbium"
+            },
+            "2": {
+              "name": "keyword.control.import.terbium"
+            },
+            "3": {
+              "name": "entity.name.import.terbium"
+            }
+          }
+        },
+        {
+          "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)",
+          "captures": {
+            "1": {
+              "name": "entity.name.import.terbium"
+            }
+          }
+        },
+        {
+          "begin": "\\{",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.import.begin.terbium"
+            }
+          },
+          "end": "\\}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.section.import.end.terbium"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#import_inner"
+            }
+          ]
+        }
+      ]
+    },
+    "import": {
+      "name": "meta.import.terbium",
+      "begin": "\\bimport\\b",
+      "beginCaptures": {
+        "0": {
+          "name": "keyword.control.import.terbium"
+        }
+      },
+      "end": ";",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.terminator.terbium"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#import_inner"
         }
       ]
     }
