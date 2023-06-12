@@ -196,6 +196,11 @@
       "name": "constant.language.boolean.terbium",
       "match": "\\b(true|false)\\b"
     },
+    "void_literal": {
+      "comment": "Void constant",
+      "name": "constant.language.void.terbium",
+      "match": "\\bvoid\\b"
+    },
     "self": {
       "comment": "Self variable",
       "name": "variable.language.terbium",
@@ -229,6 +234,9 @@
       "patterns": [
         {
           "include": "#bool_literal"
+        },
+        {
+          "include": "#void_literal"
         },
         {
           "include": "#self"
