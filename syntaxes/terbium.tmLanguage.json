@@ -223,7 +223,7 @@
     "primitive_ty": {
       "comment": "Primitive type",
       "name": "storage.type.primitive.terbium",
-      "match": "\\b(u?int(?:8|16|32|64|128|ptr)?|float(?:32|64|128)?|bool|char|string|void)\\b"
+      "match": "\\b(u?int(?:8|16|32|64|128|ptr)?|float(?:32|64|128)?|bool|char|string|void|never)\\b"
     },
     "reserved": {
       "patterns": [
