@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>contactName</key>
+	<string>jay3332</string>
+	<key>description</key>
+	<string>Terbium Language Support</string>
+
+	<key>name</key>
+	<string>Terbium</string>
+	<key>uuid</key>
+	<string>8BB0DBAF-E65C-4E14-A6A7-467D4AA535E0</string>
+</dict>
+</plist>
