@@ -367,13 +367,13 @@
           "name": "keyword.control.terbium"
         },
         "2": {
-          "name": "punctuation.section.other.arms.terbium"
+          "name": "punctuation.section.braces.begin.terbium"
         }
       },
       "end": "\\}",
       "endCaptures": {
         "0": {
-          "name": "punctuation.section.other.arms.terbium"
+          "name": "punctuation.section.braces.end.terbium"
         }
       },
       "patterns": [
@@ -383,6 +383,110 @@
         },
         {
           "include": "#atom"
+        }
+      ]
+    },
+
+    "match": {
+      "name": "meta.match.terbium",
+      "begin": "\\b(match)\\s+",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.control.terbium"
+        }
+      },
+      "end": "\\}",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.section.braces.end.terbium"
+        }
+      },
+      "patterns": [
+        {
+          "begin": "(?<=\\bmatch\\s+)",
+          "end": "(?=\\{)",
+          "patterns": [
+            {
+              "include": "#atom"
+            }
+          ]
+        },
+        {
+          "name": "meta.match-arms.terbium",
+          "begin": "\\{",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.section.braces.begin.terbium"
+            }
+          },
+          "end": "(?=\\})",
+          "patterns": [
+            {
+              "name": "meta.arm.terbium",
+              "end": "(?=[,\\}])",
+              "begin": "(?<=[,\\{])",
+              "patterns": [
+                {
+                  "name": "meta.arm.else.terbium",
+                  "begin": "\\s*(else)\\b",
+                  "beginCaptures": {
+                    "1": {
+                      "name": "keyword.control.terbium"
+                    }
+                  },
+                  "end": "(?=[,\\}])",
+                  "patterns": [
+                    {
+                      "include": "#atom"
+                    }
+                  ]
+                },
+                {
+                  "name": "meta.arm.condition.terbium",
+                  "begin": "\\bif\\b",
+                  "beginCaptures": {
+                    "0": {
+                      "name": "keyword.control.terbium"
+                    }
+                  },
+                  "end": "(?=->)",
+                  "patterns": [
+                    {
+                      "include": "#atom"
+                    }
+                  ]
+                },
+                {
+                  "name": "meta.arm.diverge.terbium",
+                  "begin": "->",
+                  "beginCaptures": {
+                    "0": {
+                      "name": "keyword.operator.diverge.terbium"
+                    }
+                  },
+                  "end": "(?=[,\\}])",
+                  "patterns": [
+                    {
+                      "include": "#atom"
+                    }
+                  ]
+                },
+                {
+                  "match": "\\s+$"
+                },
+                {
+                  "name": "meta.arm.pattern.terbium",
+                  "begin": "(?<=[,\\{])|^\\s*",
+                  "end": "(?=\\bif\\b|->|\\})",
+                  "patterns": [
+                    {
+                      "include": "#pat"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -409,6 +513,9 @@
         },
         {
           "include": "#when"          
+        },
+        {
+          "include": "#match"
         },
         {
           "name": "meta.function-call.terbium",
@@ -442,6 +549,10 @@
           ]
         },
         {
+          "name": "entity.name.label",
+          "match": ":([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)\\b"
+        },
+        {
           "include": "#ident"
         },
         {
@@ -466,7 +577,7 @@
         },
         {
           "name": "keyword.operator.terbium",
-          "match": "[!=]=|(\\+|\\-|\\*\\*?|/|%|\\|\\|?|&&?|\\^|~|!|<<?|>>?)=?"
+          "match": "[!=]=|(\\+|\\-|\\*\\*?|/|%|\\|\\|?|&&?|\\^|~|!|<<?|>>?)=?|\\|>"
         },
         {
           "name": "meta.block.terbium",
@@ -618,15 +729,27 @@
 
     "pat_ident": {
       "comment": "Binding",
-      "match": "(\\bmut\\s+)?([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)",
-      "captures": {
-        "1": {
-          "name": "storage.modifier.mutable.terbium"
+      "patterns": [
+        {
+          "match": "\\b(mut)\\s+([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)",
+          "captures": {
+            "1": {
+              "name": "storage.modifier.mutable.terbium"
+            },
+            "2": {
+              "name": "variable.other.readwrite.terbium"
+            }
+          }
         },
-        "2": {
-          "name": "variable.other.terbium"
+        {
+          "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)\\b",
+          "captures": {
+            "1": {
+              "name": "variable.other.terbium"
+            }
+          }
         }
-      }
+      ]
     },
     "pat_tuple": {
       "comment": "Tuple binding",
@@ -652,16 +775,76 @@
         }
       ]
     },
+    "pat_rest": {
+      "comment": "Rest",
+      "match": "\\*",
+      "name": "constant.language.wildcard.terbium"
+    },
+    "pat_as": {
+      "match": "\\b(as)\\s+((?:mut\\s+)?(?:[a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`))",
+      "captures": {
+        "1": {
+          "name": "keyword.operator.as.terbium"
+        },
+        "2": {
+          "patterns": [
+            {
+              "match": "(mut)\\s+(.+)",
+              "captures": {
+                "1": {
+                  "name": "storage.modifier.mutable.terbium"
+                },
+                "2": {
+                  "name": "variable.other.readwrite.terbium"
+                }
+              }
+            },
+            {
+              "match": ".+",
+              "name": "variable.other.terbium"
+            }
+          ]
+        }
+      }
+    },
     "pat": {
       "patterns": [
         {
           "include": "#comment"
         },
         {
+          "include": "#int_literal"
+        },
+        {
+          "include": "#float_literal"
+        },
+        {
+          "include": "#string_literal"
+        },
+        {
+          "include": "#char_literal"
+        },
+        {
+          "include": "#bool_literal"
+        },
+        {
+          "include": "#void_literal"
+        },
+        {
+          "include": "#pat_as"
+        },
+        {
           "include": "#pat_ident"
         },
         {
           "include": "#pat_tuple"
+        },
+        {
+          "include": "#pat_rest"
+        },
+        {
+          "match": "\\.\\.=?",
+          "name": "keyword.operator.range.terbium"
         }
       ]
     },
@@ -702,13 +885,30 @@
         }
       ]
     },
+    "pat_as_func": {
+      "match": "\\b(as)\\s+((?:mut\\s+)?[a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)",
+      "captures": {
+        "1": {
+          "name": "keyword.operator.as.terbium"
+        },
+        "2": {
+          "name": "variable.parameter.terbium"
+        }
+      }
+    },
     "pat_func": {
       "patterns": [
+        {
+          "include": "#pat_as_func"
+        },
         {
           "include": "#pat_ident_func"
         },
         {
           "include": "#pat_tuple_func"
+        },
+        {
+          "include": "#pat_rest"
         }
       ]
     },
@@ -762,7 +962,7 @@
           "name": "keyword.declaration.constant.terbium"
         },
         "2": {
-          "name": "entity.name.constant.terbium"
+          "name": "entity.name.constant.terbium, variable.other.constant.terbium"
         }
       },
       "end": "\\=",
@@ -797,7 +997,7 @@
           "name": "keyword.declaration.alias.terbium"
         },
         "2": {
-          "name": "entity.name.constant.terbium"
+          "name": "entity.name.constant.terbium, variable.other.constant.terbium"
         }
       },
       "end": "="
@@ -1253,6 +1453,10 @@
         {
           "match": "\\.",
           "name": "punctuation.accessor.terbium"
+        },
+        {
+          "match": "\\*",
+          "name": "constant.language.wildcard.terbium"
         },
         {
           "match": "self|super|lib",
