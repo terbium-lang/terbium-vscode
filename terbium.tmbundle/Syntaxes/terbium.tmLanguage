@@ -43,11 +43,19 @@
 					</dict>
 					<dict>
 						<key>include</key>
+						<string>#lambda_def</string>
+					</dict>
+					<dict>
+						<key>include</key>
 						<string>#struct_inner</string>
 					</dict>
 					<dict>
 						<key>include</key>
 						<string>#concrete_def</string>
+					</dict>
+					<dict>
+						<key>include</key>
+						<string>#extend_def</string>
 					</dict>
 					<dict>
 						<key>include</key>
@@ -317,6 +325,30 @@
 				<key>match</key>
 				<string>\bSelf\b</string>
 			</dict>
+			<key>builtin</key>
+			<dict>
+				<key>patterns</key>
+				<array>
+					<dict>
+						<key>name</key>
+						<string>support.constant.terbium</string>
+						<key>match</key>
+						<string>\bnone\b</string>
+					</dict>
+					<dict>
+						<key>name</key>
+						<string>support.function.terbium</string>
+						<key>match</key>
+						<string>\bsome\b</string>
+					</dict>
+					<dict>
+						<key>name</key>
+						<string>support.type.terbium</string>
+						<key>match</key>
+						<string>\bOption\b</string>
+					</dict>
+				</array>
+			</dict>
 			<key>kw_control</key>
 			<dict>
 				<key>comment</key>
@@ -344,6 +376,15 @@
 				<key>match</key>
 				<string>\bstatic\b</string>
 			</dict>
+			<key>kw_do</key>
+			<dict>
+				<key>comment</key>
+				<string>Do keyword</string>
+				<key>name</key>
+				<string>keyword.control.lambda.terbium</string>
+				<key>match</key>
+				<string>\bdo\b</string>
+			</dict>
 			<key>primitive_ty</key>
 			<dict>
 				<key>comment</key>
@@ -364,6 +405,10 @@
 					<dict>
 						<key>include</key>
 						<string>#void_literal</string>
+					</dict>
+					<dict>
+						<key>include</key>
+						<string>#builtin</string>
 					</dict>
 					<dict>
 						<key>include</key>
@@ -392,6 +437,10 @@
 					<dict>
 						<key>include</key>
 						<string>#kw_static</string>
+					</dict>
+					<dict>
+						<key>include</key>
+						<string>#kw_do</string>
 					</dict>
 					<dict>
 						<key>include</key>
@@ -759,6 +808,14 @@
 					<dict>
 						<key>include</key>
 						<string>#reserved</string>
+					</dict>
+					<dict>
+						<key>comment</key>
+						<string>Shorthand parameter</string>
+						<key>match</key>
+						<string>(\b_\b)|(\$(\d+|[a-zA-Z_][a-zA-Z0-9_]*|`[^\n\r`]+`)\b)</string>
+						<key>name</key>
+						<string>variable.parameter.terbium</string>
 					</dict>
 					<dict>
 						<key>include</key>
@@ -1162,9 +1219,17 @@
 				<key>comment</key>
 				<string>Rest</string>
 				<key>match</key>
-				<string>\*</string>
+				<string>\.\.\.((?:[a-zA-Z_][a-zA-Z0-9_]*|`[^\n\r`]+`)\b)?</string>
 				<key>name</key>
 				<string>constant.language.wildcard.terbium</string>
+				<key>captures</key>
+				<dict>
+					<key>1</key>
+					<dict>
+						<key>name</key>
+						<string>variable.other.terbium</string>
+					</dict>
+				</dict>
 			</dict>
 			<key>pat_as</key>
 			<dict>
@@ -1494,6 +1559,112 @@
 				</dict>
 				<key>end</key>
 				<string>=</string>
+			</dict>
+			<key>lambda_def</key>
+			<dict>
+				<key>comment</key>
+				<string>Lambda definition</string>
+				<key>name</key>
+				<string>meta.definition.function.terbium</string>
+				<key>begin</key>
+				<string>\\</string>
+				<key>beginCaptures</key>
+				<array>
+					<dict>
+						<key>name</key>
+						<string>punctuation.definition.lambda.terbium</string>
+					</dict>
+				</array>
+				<key>end</key>
+				<string>\bdo\b</string>
+				<key>endCaptures</key>
+				<array>
+					<dict>
+						<key>name</key>
+						<string>keyword.control.lambda.terbium</string>
+					</dict>
+				</array>
+				<key>patterns</key>
+				<array>
+					<dict>
+						<key>include</key>
+						<string>#type_params</string>
+					</dict>
+					<dict>
+						<key>include</key>
+						<string>#pat_func</string>
+					</dict>
+					<dict>
+						<key>match</key>
+						<string>,</string>
+						<key>name</key>
+						<string>punctuation.separator.terbium</string>
+					</dict>
+					<dict>
+						<key>begin</key>
+						<string>:</string>
+						<key>beginCaptures</key>
+						<array>
+							<dict>
+								<key>name</key>
+								<string>punctuation.separator.type.terbium</string>
+							</dict>
+						</array>
+						<key>end</key>
+						<string>(?=,|\s+do)</string>
+						<key>patterns</key>
+						<array>
+							<dict>
+								<key>include</key>
+								<string>#type</string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>begin</key>
+						<string>=</string>
+						<key>beginCaptures</key>
+						<array>
+							<dict>
+								<key>name</key>
+								<string>keyword.operator.assignment.terbium</string>
+							</dict>
+						</array>
+						<key>end</key>
+						<string>(?=,|\s+do)</string>
+						<key>patterns</key>
+						<array>
+							<dict>
+								<key>include</key>
+								<string>#atom</string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>begin</key>
+						<string>-&gt;</string>
+						<key>beginCaptures</key>
+						<array>
+							<dict>
+								<key>name</key>
+								<string>keyword.operator.returns.terbium</string>
+							</dict>
+						</array>
+						<key>end</key>
+						<string>(?=\s+do)</string>
+						<key>patterns</key>
+						<array>
+							<dict>
+								<key>include</key>
+								<string>#type</string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>include</key>
+						<string>#comment</string>
+					</dict>
+				</array>
 			</dict>
 			<key>func_def</key>
 			<dict>
@@ -2125,6 +2296,118 @@
 					<dict>
 						<key>include</key>
 						<string>#enum_def</string>
+					</dict>
+				</array>
+			</dict>
+			<key>extend_def</key>
+			<dict>
+				<key>name</key>
+				<string>meta.definition.extension.terbium</string>
+				<key>begin</key>
+				<string>\bextend\b</string>
+				<key>beginCaptures</key>
+				<array>
+					<dict>
+						<key>name</key>
+						<string>keyword.declaration.extend.terbium</string>
+					</dict>
+				</array>
+				<key>end</key>
+				<string>\}|;</string>
+				<key>endCaptures</key>
+				<array>
+					<dict>
+						<key>patterns</key>
+						<array>
+							<dict>
+								<key>name</key>
+								<string>punctuation.section.block.end.terbium</string>
+								<key>match</key>
+								<string>\}</string>
+							</dict>
+							<dict>
+								<key>name</key>
+								<string>punctuation.terminator.terbium</string>
+								<key>match</key>
+								<string>;</string>
+							</dict>
+						</array>
+					</dict>
+				</array>
+				<key>patterns</key>
+				<array>
+					<dict>
+						<key>begin</key>
+						<string>(?&lt;=\bextend\s+)</string>
+						<key>end</key>
+						<string>(?=\s+for\b|\{)</string>
+						<key>patterns</key>
+						<array>
+							<dict>
+								<key>include</key>
+								<string>#type</string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>begin</key>
+						<string>\bfor\b</string>
+						<key>beginCaptures</key>
+						<array>
+							<dict>
+								<key>name</key>
+								<string>keyword.other.extend_for.terbium</string>
+							</dict>
+						</array>
+						<key>end</key>
+						<string>(?=;|\{)</string>
+						<key>patterns</key>
+						<array>
+							<dict>
+								<key>include</key>
+								<string>#type</string>
+							</dict>
+						</array>
+					</dict>
+					<dict>
+						<key>begin</key>
+						<string>\{</string>
+						<key>beginCaptures</key>
+						<array>
+							<dict>
+								<key>name</key>
+								<string>punctuation.section.block.begin.terbium</string>
+							</dict>
+						</array>
+						<key>end</key>
+						<string>(?=\})</string>
+						<key>patterns</key>
+						<array>
+							<dict>
+								<key>include</key>
+								<string>#comment</string>
+							</dict>
+							<dict>
+								<key>include</key>
+								<string>#vis</string>
+							</dict>
+							<dict>
+								<key>include</key>
+								<string>#func_def</string>
+							</dict>
+							<dict>
+								<key>include</key>
+								<string>#const_def</string>
+							</dict>
+							<dict>
+								<key>include</key>
+								<string>#alias_def</string>
+							</dict>
+							<dict>
+								<key>include</key>
+								<string>#struct_field</string>
+							</dict>
+						</array>
 					</dict>
 				</array>
 			</dict>
