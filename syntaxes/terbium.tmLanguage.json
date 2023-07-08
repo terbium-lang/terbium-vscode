@@ -688,6 +688,17 @@
           "match": "\\bto\\b"
         },
         {
+          "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*|`[^\\n\\r`]+`)\\s+(is)\\b",
+          "captures": {
+            "1": {
+              "name": "variable.parameter.terbium"
+            },
+            "2": {
+              "name": "keyword.operator.is.terbium"
+            }
+          }          
+        },
+        {
           "name": "keyword.operator.throws.terbium",
           "match": "\\bthrows\\b"
         },
@@ -1558,6 +1569,9 @@
               "include": "#func_def"
             },
             {
+              "include": "#decorator"
+            },
+            {
               "include": "#struct_field"
             }
           ]
@@ -1604,6 +1618,9 @@
             },
             {
               "include": "#func_def"
+            },
+            {
+              "include": "#decorator"
             },
             {
               "include": "#enum_field"
@@ -1691,6 +1708,9 @@
             },
             {
               "include": "#func_def"
+            },
+            {
+              "include": "#decorator"
             },
             {
               "include": "#type_alias_def"
@@ -1789,6 +1809,9 @@
             },
             {
               "include": "#func_def"
+            },
+            {
+              "include": "#decorator"
             },
             {
               "include": "#type_alias_def"

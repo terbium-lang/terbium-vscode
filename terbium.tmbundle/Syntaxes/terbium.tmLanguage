@@ -1030,6 +1030,23 @@
 						<string>\bto\b</string>
 					</dict>
 					<dict>
+						<key>match</key>
+						<string>\b([a-zA-Z_][a-zA-Z0-9_]*|`[^\n\r`]+`)\s+(is)\b</string>
+						<key>captures</key>
+						<dict>
+							<key>1</key>
+							<dict>
+								<key>name</key>
+								<string>variable.parameter.terbium</string>
+							</dict>
+							<key>2</key>
+							<dict>
+								<key>name</key>
+								<string>keyword.operator.is.terbium</string>
+							</dict>
+						</dict>
+					</dict>
+					<dict>
 						<key>name</key>
 						<string>keyword.operator.throws.terbium</string>
 						<key>match</key>
@@ -2308,6 +2325,10 @@
 							</dict>
 							<dict>
 								<key>include</key>
+								<string>#decorator</string>
+							</dict>
+							<dict>
+								<key>include</key>
 								<string>#struct_field</string>
 							</dict>
 						</array>
@@ -2375,6 +2396,10 @@
 							<dict>
 								<key>include</key>
 								<string>#func_def</string>
+							</dict>
+							<dict>
+								<key>include</key>
+								<string>#decorator</string>
 							</dict>
 							<dict>
 								<key>include</key>
@@ -2497,6 +2522,10 @@
 							<dict>
 								<key>include</key>
 								<string>#func_def</string>
+							</dict>
+							<dict>
+								<key>include</key>
+								<string>#decorator</string>
 							</dict>
 							<dict>
 								<key>include</key>
@@ -2638,6 +2667,10 @@
 							<dict>
 								<key>include</key>
 								<string>#func_def</string>
+							</dict>
+							<dict>
+								<key>include</key>
+								<string>#decorator</string>
 							</dict>
 							<dict>
 								<key>include</key>
