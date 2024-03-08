@@ -240,7 +240,7 @@
     "kw_operator": {
       "comment": "Operator keyword",
       "name": "keyword.operator.word.terbium",
-      "match": "\\b(to|is)\\b"
+      "match": "\\b!?(to|is|in)\\b"
     },
     "kw_static": {
       "comment": "Static keyword",
